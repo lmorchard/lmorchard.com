@@ -1,0 +1,65 @@
+==================================================================
+https://keybase.io/lmorchard
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of http://lmorchard.com
+  * I am lmorchard (https://keybase.io/lmorchard) on keybase.
+  * I have a public key with fingerprint 1F75 8522 08D5 284D 9680  5EFF 3D7E E8C3 BE5E C6B3
+
+To claim this, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "fingerprint": "1f75852208d5284d96805eff3d7ee8c3be5ec6b3",
+            "host": "keybase.io",
+            "key_id": "3d7ee8c3be5ec6b3",
+            "uid": "8e4114a530113c35d75c61cc95d97c00",
+            "username": "lmorchard"
+        },
+        "service": {
+            "hostname": "lmorchard.com",
+            "protocol": "http:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1396458902,
+    "expire_in": 157680000,
+    "prev": "75a6eaa2e36cee0a281622bf10ba821388f6f4a7c436ccb7ee84c58a1958def1",
+    "seqno": 8,
+    "tag": "signature"
+}
+
+with the aforementioned key, yielding the PGP signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v0.1.1
+Comment: https://keybase.io/crypto
+
+yMHrAnicbZFtSBRbGMfX9Fp3c10VhS75ZYdilWSZ15fdLBKSS4Uvm8lWStPMmTM6
+re5sM7NrulfygxBCYHG5UhHFhd7QD6GB9qIm0odASTErkUsKNxNBVknSXpb0jNSX
+6HwZ5v/8/v/nnOd55ki22ZOmg3GuZPxtMGlkaCViqygs7ohhkiY3Yr4YFoSbH0UN
+1UA9rKshE/NhhMIxPEOSOC8zJE/LXpbHGagolMxByANKggwErERhBVitZlgOFCOJ
+BvSoGtLQj6DKSP0FH9ks8JAmCFpkKJwgKEAxMscAlgDAy8heDuC4BRpQD4n1ENF1
+9ZoOakVdxpoLMCRHVYDk2GbvnxEP0OqRO6xrpga0OlSqNc2wz3KajWELbYCS8D1E
+kNSQjF6ODFGoG6oWwnwEIoGpWqkE5WVphvfiZAEGz4VVHQqqRTAcmgc6VhsYRZEc
+I7JQFElIsQBCXCR5giVJSSFwSeRJguJ5hVVokQM0AoBkDYUGDC8SXoaXoUKg/gY8
+G9IwH4+uKdagSEOtCYlmRIdY8/BQdYotyW5L/W2LtTub/feMHxv1FG1NOFu/Cp6m
+yaVe/t7S4YdfBj6cBzvu5Ax1/ZMZmKgyRuIzq8fdZ1zZRe+TZytPvVr2ZKwsSNWJ
+pnj7re1VpcV5f087UrLHd7Y1tAnxsb2f7H24e/d6ZN64dnG5x8z9Y18rlRj0zS35
+16acHe3KvwfcQuGFvszXlYm7Hx+5/jztzBvNfbqrNz/t8ZH+8FH/zdKFbsdqetm2
+yx2N+MEsm3HCnz7jfOAKOE4SUo7nv7FFrX9Pfo8/tnZVwVvWp2+8M6LPy8vZhUn6
+xeKT2zBQ8iYxPFqnOd0tlwaDKVnXXV1zk91/CZ3fykb/f5l6rOpK9UDn/UMTs+2B
+z9kVafNT+0c2ABByF5c=
+=fPF6
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/lmorchard
+
+==================================================================
