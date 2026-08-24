@@ -38,8 +38,20 @@ S3 and is expected to keep doing so. It is an asset directory, not a page.
 
 ## Publishing
 
-Served from `/srv/www/lmorchard.com` on aerostat02 by Caddy. Publish with the
-helper in the
+Served from `/srv/www/lmorchard.com` on aerostat02 by Caddy.
+
+### From CI
+
+`.github/workflows/publish.yml` rsyncs `site/` on every push to `main`. The
+`DEPLOY_SSH_KEY` secret is forced through `rrsync` by an `authorized_keys`
+`command=` on the server and scoped to `/srv/www/lmorchard.com` alone, so it can
+write one directory and nothing else — which matters because aerostat02 is a
+Tailscale node. Rotation is: regenerate the key, update `deploy_key` in the
+aerostat02 repo's `caddy_sites` entry, re-run the playbook, replace the secret.
+
+### By hand
+
+With the helper in the
 [aerostat02.lmorchard.com](https://github.com/lmorchard/aerostat02.lmorchard.com)
 repo:
 

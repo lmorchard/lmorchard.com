@@ -1,0 +1,61 @@
+---
+# Publish site/ to aerostat02 over rsync.
+#
+# The key in DEPLOY_SSH_KEY is forced through rrsync by an authorized_keys
+# `command=` on the server and scoped to /srv/www/lmorchard.com alone, so this
+# secret can write one directory and nothing else. That is also why the path
+# after the colon below is EMPTY: rrsync makes the site directory the transfer
+# root, so the destination is neither named nor reachable from here.
+#
+# See the "Static sites" section of
+# https://github.com/lmorchard/aerostat02.lmorchard.com
+name: Publish to aerostat02
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Two concurrent rsyncs with --delete against one directory can interleave into
+# a state matching neither commit. Queue instead of cancelling: a cancelled
+# publish could leave the site half-written.
+concurrency:
+  group: publish-aerostat02
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # --delete means an empty or missing site/ would erase the live site
+      # rather than fail the build. Check before opening the connection.
+      - name: Verify there is something to publish
+        run: |
+          test -d site || { echo "site/ is missing"; exit 1; }
+          count=$(find site -type f | wc -l)
+          echo "site/ contains $count files"
+          test "$count" -gt 0 || { echo "site/ is empty; refusing"; exit 1; }
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H aerostat02.lmorchard.com >> ~/.ssh/known_hosts
+
+      # Flags are load-bearing and documented in the aerostat02 README:
+      # -rlptvz or -a exit 23 on the root-owned site directory, after
+      # transferring every file correctly -- a red build on a successful deploy,
+      # where the natural response (retry) reproduces it exactly.
+      #
+      # --max-delete stops a broken commit from erasing the site. --exclude
+      # '.git' is defence in depth; the generated Caddy block also hides it.
+      - name: Publish
+        run: |
+          rsync -rltvz --omit-dir-times --delete --max-delete=500 \
+            --exclude '.git' \
+            -e 'ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes' \
+            ./site/ webdeploy@aerostat02.lmorchard.com:
