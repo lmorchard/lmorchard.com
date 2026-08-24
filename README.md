@@ -10,7 +10,38 @@ Unlike [blog.lmorchard.com](https://github.com/lmorchard/blog.lmorchard.com),
 there was never a generator repo for the apex site: files were uploaded to S3 by
 hand and served from there behind CloudFront.
 
-So there is no source and no build output — `site/` is the site. Edit it directly.
+## Two publishers, and this repo is only one of them
+
+**The front page is not in this repo.** `lmorchard/about-me` generates
+`index.html`, `index.css`, `index.json`, `bio.md`, `llms.txt`, `resume.pdf` and
+`assets/`, and rsyncs them straight into `/srv/www/lmorchard.com` on a schedule.
+That content turns over hourly and nobody wants 24 commits a day of regenerated
+JSON, so it is deliberately never committed anywhere.
+
+What lives here is everything else — the hand-maintained remainder: `images/`,
+`about-me/` (legacy assets, unrelated to the generator despite the name),
+`webfinger/`, `.well-known/`, `browserid/`, the 2017 archive, `resume.html`,
+`pubkey.asc`, `subs.opml`, `favicon.ico`. There is no build step; `site/` is
+edited directly.
+
+The import commit at the root of this history *does* contain the generated
+files, because the S3 bucket it was mirrored from held both and nothing in a
+bucket distinguishes build output from an upload. They were removed in the
+following commit. That first commit is left intact on purpose: it is the only
+record of what the bucket contained before the cutover.
+
+Because two publishers write one directory, each owns a fixed set of paths:
+
+- **about-me** rsyncs its seven paths with **no `--delete`** — it owns seven
+  files in a directory of 250-odd and would otherwise erase the rest.
+- **this repo** rsyncs with `--delete` but `--exclude`s those same seven, which
+  also protects them from deletion. Without that, a push here would remove the
+  live front page within minutes.
+
+That duplicated list is a coupling between the two repos. about-me's workflow
+fails its own build if its output stops matching, so the breakage surfaces
+where the change was made instead of on the live site an hour later. Change the
+two lists together.
 
 The import was verified byte-for-byte against the bucket at the time it was
 taken: 254 files, 176,688,773 bytes, 0 differences via `rclone check --checksum`.
@@ -42,7 +73,8 @@ Served from `/srv/www/lmorchard.com` on aerostat02 by Caddy.
 
 ### From CI
 
-`.github/workflows/publish.yml` rsyncs `site/` on every push to `main`. The
+`.github/workflows/publish.yml` rsyncs `site/` on every push to `main`, minus
+the paths about-me owns. The
 `DEPLOY_SSH_KEY` secret is forced through `rrsync` by an `authorized_keys`
 `command=` on the server and scoped to `/srv/www/lmorchard.com` alone, so it can
 write one directory and nothing else — which matters because aerostat02 is a

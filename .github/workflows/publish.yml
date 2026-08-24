@@ -53,9 +53,29 @@ jobs:
       #
       # --max-delete stops a broken commit from erasing the site. --exclude
       # '.git' is defence in depth; the generated Caddy block also hides it.
+      # The excludes are load-bearing, not tidiness. lmorchard.com has a second
+      # publisher: lmorchard/about-me regenerates the front page hourly and
+      # rsyncs it into this same directory. Those paths are not in this repo, so
+      # without the excludes `--delete` would remove them from the live site
+      # within minutes of any push here -- and if they were in this repo, it
+      # would instead revert a fresh build to a stale commit.
+      #
+      # `--exclude` also protects a path from deletion, which is exactly the
+      # property needed. Anchored with a leading slash so `/index.html` does not
+      # also match `about-me/index.html` or similar deeper paths.
+      #
+      # This list is duplicated in about-me's workflow, which fails its build if
+      # its output ever stops matching. Change the two together.
       - name: Publish
         run: |
           rsync -rltvz --omit-dir-times --delete --max-delete=500 \
             --exclude '.git' \
+            --exclude '/assets/' \
+            --exclude '/bio.md' \
+            --exclude '/index.css' \
+            --exclude '/index.html' \
+            --exclude '/index.json' \
+            --exclude '/llms.txt' \
+            --exclude '/resume.pdf' \
             -e 'ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes' \
             ./site/ webdeploy@aerostat02.lmorchard.com:
