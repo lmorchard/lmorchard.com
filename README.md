@@ -3,6 +3,9 @@
 This repo holds the hand-maintained content for lmorchard.com. There is no build
 step. Edit the files in `site/` directly.
 
+`site/plan.txt` also answers `finger lmorchard@lmorchard.com`, through a symlink
+that the aerostat02 repo declares.
+
 ## Publish
 
 Push to `main`. The workflow in `.github/workflows/publish.yml` then rsyncs
