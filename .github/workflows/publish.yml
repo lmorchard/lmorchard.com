@@ -62,20 +62,21 @@ jobs:
       #
       # `--exclude` also protects a path from deletion, which is exactly the
       # property needed. Anchored with a leading slash so `/index.html` does not
-      # also match `about-me/index.html` or similar deeper paths.
+      # also match a deeper `about-me/assets/fxemoji-symbols/index.html`.
       #
-      # This list is duplicated in about-me's workflow, which fails its build if
-      # its output ever stops matching. Change the two together.
+      # Three entries, and it stays three: everything that generator emits apart
+      # from the two root files goes under about-me/, so a new asset lands inside
+      # an already-excluded directory. This used to enumerate seven files, which
+      # meant any new output was one push away from being deleted here.
+      #
+      # about-me's scripts/publish.sh fails its build if its output stops
+      # matching this list. Change the two together.
       - name: Publish
         run: |
           rsync -rltvz --omit-dir-times --delete --max-delete=500 \
             --exclude '.git' \
-            --exclude '/assets/' \
-            --exclude '/bio.md' \
-            --exclude '/index.css' \
             --exclude '/index.html' \
             --exclude '/index.json' \
-            --exclude '/llms.txt' \
-            --exclude '/resume.pdf' \
+            --exclude '/about-me/' \
             -e 'ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes' \
             ./site/ webdeploy@aerostat02.lmorchard.com:
