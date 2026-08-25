@@ -3,28 +3,6 @@
 This repo holds the hand-maintained content for lmorchard.com. There is no build
 step. Edit the files in `site/` directly.
 
-Caddy serves the site from `/srv/www/lmorchard.com` on aerostat02.
-
-## Another repo owns three paths
-
-`lmorchard/about-me` rebuilds the front page every hour. It writes three paths
-into the same directory:
-
-- `index.html`
-- `index.json`
-- `about-me/`
-
-This repo publishes with `rsync --delete` and excludes those three paths. Do not
-add them here. If a file is committed here and generated there, every push
-replaces the fresh copy with a stale one.
-
-Both repos keep the same list. When the output of `about-me` no longer matches
-that list, its build stops. The error then appears in the repo that changed.
-
-An `--exclude` also protects a path from deletion. This repo therefore cannot
-erase a file under `about-me/`. Erase the file on the server, or remove the
-exclude first.
-
 ## Publish
 
 Push to `main`. The workflow in `.github/workflows/publish.yml` then rsyncs
@@ -40,6 +18,19 @@ make publish SITE=lmorchard.com     # add DRY_RUN=1 to preview
 Use the flags `-rltvz --omit-dir-times`. Do not use `-a` or `-p`. The site
 directory belongs to root, so those two flags exit 23 after they transfer every
 file correctly.
+
+## Excluding paths
+
+`lmorchard/about-me` rebuilds the front page every hour. It writes three paths
+into the same directory:
+
+- `index.html`
+- `index.json`
+- `about-me/`
+
+This repo publishes with `rsync --delete` and excludes those three paths. Do not
+add them here. If a file is committed here and generated there, every push
+replaces the fresh copy with a stale one.
 
 ## Rotate the deploy key
 
